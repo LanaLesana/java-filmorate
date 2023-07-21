@@ -7,12 +7,12 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @RestController
 public class FilmController {
-    private HashMap<Integer, Film> films = new HashMap<>();
+    private LinkedHashMap<Integer, Film> films = new LinkedHashMap<>();
     private Integer generatedFilmId = 1;
 
     @GetMapping("/films")
