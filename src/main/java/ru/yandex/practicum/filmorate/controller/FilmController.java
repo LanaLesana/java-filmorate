@@ -27,6 +27,7 @@ public class FilmController {
         films.put(film.getFilmId(), film);
         return film;
     }
+
     @PutMapping(value = "/film")
 
     public Film update(@RequestBody Film film) {
@@ -37,6 +38,7 @@ public class FilmController {
         }
         return film;
     }
+
     private void isValidFilm(Film film) {
         if(film.getName() == null || film.getName().isBlank())  {
             throw new ValidationException("Неверное название");

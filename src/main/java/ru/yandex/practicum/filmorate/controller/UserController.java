@@ -20,6 +20,7 @@ public class UserController {
         return new ArrayList<>(users.values());
     }
 
+
     @PostMapping(value = "/user")
         public User addUser(@RequestBody User user) {
         isValidUser(user);
@@ -27,6 +28,7 @@ public class UserController {
             users.put(user.getUserId(), user);
             return user;
     }
+
     @PutMapping(value = "/user")
     public User update(@RequestBody User user) {
         isValidUser(user);
@@ -36,6 +38,7 @@ public class UserController {
         }
         return user;
     }
+
     private void isValidUser(User user) {
         if(user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@"))  {
             throw new ValidationException("Указан неправильный e-mail.");
