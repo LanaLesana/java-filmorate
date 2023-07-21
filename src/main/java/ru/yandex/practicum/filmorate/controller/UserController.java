@@ -36,7 +36,6 @@ public class UserController {
         }
         return user;
     }
-
     private void isValidUser(User user) {
         if(user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@"))  {
             throw new ValidationException("Указан неправильный e-mail.");

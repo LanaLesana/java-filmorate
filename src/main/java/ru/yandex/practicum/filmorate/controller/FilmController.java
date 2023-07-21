@@ -4,7 +4,6 @@ package ru.yandex.practicum.filmorate.controller;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,6 +20,7 @@ public class FilmController {
         return new ArrayList<>(films.values());
     }
     @PostMapping(value = "/film")
+
     public Film add(@RequestBody Film film) {
         isValidFilm(film);
         film.setFilmId(generatedFilmId++);
@@ -28,6 +28,7 @@ public class FilmController {
         return film;
     }
     @PutMapping(value = "/film")
+
     public Film update(@RequestBody Film film) {
         isValidFilm(film);
         if (films.containsKey(film.getFilmId())) {
@@ -39,19 +40,13 @@ public class FilmController {
     private void isValidFilm(Film film) {
         if(film.getName() == null || film.getName().isBlank())  {
             throw new ValidationException("Неверное название");
-
         }else if(film.getDescription().length() > 200) {
             throw new ValidationException("Описание превышает 200 символов.");
-
         }else if(film.getDate().isBefore(LocalDate.parse("1895-12-28"))) {
             throw new ValidationException("Неверная дата релиза.");
-
         }else if(film.getDuration() < 0) {
             throw new ValidationException("Указана неверная продолжительность фильма.");
-
         }
-
     }
-
 }
 
