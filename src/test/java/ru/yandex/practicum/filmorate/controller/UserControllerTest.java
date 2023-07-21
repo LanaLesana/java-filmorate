@@ -12,10 +12,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
     private UserController userController;
+
     @BeforeEach
-    public  void setUp() {
+    public void setUp() {
         userController = new UserController();
     }
+
     @AfterEach
     public void tearDown() {
         userController = null;
@@ -29,7 +31,7 @@ class UserControllerTest {
 
     @Test
     void addUser() {
-        User createdUser = userController.addUser(new User(1,"email@gmail.com", "Login", "Name", LocalDate.of(2000,11,11)));
+        User createdUser = userController.addUser(new User(1, "email@gmail.com", "Login", "Name", LocalDate.of(2000, 11, 11)));
         assertNotNull(createdUser.getUserId());
         assertNotNull(createdUser.getLogin());
         assertNotNull(createdUser.getName());
@@ -39,7 +41,7 @@ class UserControllerTest {
 
     @Test
     void update() {
-        User createdUser = userController.update(new User(1,"email@gmail.com", "Login", "Name", LocalDate.of(2000,11,11)));
+        User createdUser = userController.update(new User(1, "email@gmail.com", "Login", "Name", LocalDate.of(2000, 11, 11)));
         assertNotNull(createdUser.getUserId());
         assertNotNull(createdUser.getLogin());
         assertNotNull(createdUser.getName());

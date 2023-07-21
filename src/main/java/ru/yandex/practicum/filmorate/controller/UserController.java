@@ -22,31 +22,31 @@ public class UserController {
 
 
     @PostMapping(value = "/user")
-        public User addUser(@RequestBody User user) {
+    public User addUser(@RequestBody User user) {
         isValidUser(user);
-            user.setUserId(generatedUserId++);
-            users.put(user.getUserId(), user);
-            return user;
+        user.setUserId(generatedUserId++);
+        users.put(user.getUserId(), user);
+        return user;
     }
 
     @PutMapping(value = "/user")
     public User update(@RequestBody User user) {
         isValidUser(user);
-       if (users.containsKey(user.getUserId())) {
+        if (users.containsKey(user.getUserId())) {
             users.remove(user.getUserId());
-            users.put(user.getUserId(),user);
+            users.put(user.getUserId(), user);
         }
         return user;
     }
 
     private void isValidUser(User user) {
-        if(user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@"))  {
+        if (user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@")) {
             throw new ValidationException("Указан неправильный e-mail.");
-        } else if(user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
+        } else if (user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
             throw new ValidationException("Логин пустой или содержит пробелы.");
-        } else if(user.getName() == null || user.getName().isBlank()) {
+        } else if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
-        } else if(user.getBirthday().isAfter(LocalDate.now())) {
+        } else if (user.getBirthday().isAfter(LocalDate.now())) {
             throw new ValidationException("Указан неправильная дата рождения.");
         }
     }

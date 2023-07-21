@@ -19,6 +19,7 @@ public class FilmController {
     public List<Film> findAll() {
         return new ArrayList<>(films.values());
     }
+
     @PostMapping(value = "/film")
 
     public Film add(@RequestBody Film film) {
@@ -34,19 +35,19 @@ public class FilmController {
         isValidFilm(film);
         if (films.containsKey(film.getFilmId())) {
             films.remove(film.getFilmId());
-            films.put(film.getFilmId(),film);
+            films.put(film.getFilmId(), film);
         }
         return film;
     }
 
     private void isValidFilm(Film film) {
-        if(film.getName() == null || film.getName().isBlank()) {
+        if (film.getName() == null || film.getName().isBlank()) {
             throw new ValidationException("Неверное название");
-        } else if(film.getDescription().length() > 200) {
+        } else if (film.getDescription().length() > 200) {
             throw new ValidationException("Описание превышает 200 символов.");
-        } else if(film.getDate().isBefore(LocalDate.parse("1895-12-28"))) {
+        } else if (film.getDate().isBefore(LocalDate.parse("1895-12-28"))) {
             throw new ValidationException("Неверная дата релиза.");
-        } else if(film.getDuration() < 0) {
+        } else if (film.getDuration() < 0) {
             throw new ValidationException("Указана неверная продолжительность фильма.");
         }
     }
