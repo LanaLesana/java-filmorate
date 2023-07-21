@@ -20,7 +20,7 @@ public class FilmController {
         return new ArrayList<>(films.values());
     }
 
-    @PostMapping(value = "/film")
+    @PostMapping(value = "/films")
 
     public Film add(@RequestBody Film film) {
         isValidFilm(film);
@@ -29,7 +29,7 @@ public class FilmController {
         return film;
     }
 
-    @PutMapping(value = "/film")
+    @PutMapping(value = "/films")
 
     public Film update(@RequestBody Film film) {
         isValidFilm(film);

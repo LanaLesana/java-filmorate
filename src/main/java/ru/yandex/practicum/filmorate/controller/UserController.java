@@ -21,7 +21,7 @@ public class UserController {
     }
 
 
-    @PostMapping(value = "/user")
+    @PostMapping(value = "/users")
     public User addUser(@RequestBody User user) {
         isValidUser(user);
         user.setUserId(generatedUserId++);
@@ -29,7 +29,7 @@ public class UserController {
         return user;
     }
 
-    @PutMapping(value = "/user")
+    @PutMapping(value = "/users")
     public User update(@RequestBody User user) {
         isValidUser(user);
         if (users.containsKey(user.getUserId())) {
