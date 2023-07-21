@@ -42,11 +42,11 @@ public class UserController {
     private void isValidUser(User user) {
         if(user.getEmail() == null || user.getEmail().isBlank() || !user.getEmail().contains("@"))  {
             throw new ValidationException("Указан неправильный e-mail.");
-        }else if(user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
+        } else if(user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
             throw new ValidationException("Логин пустой или содержит пробелы.");
-        }else if(user.getName() == null || user.getName().isBlank()) {
+        } else if(user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
-        }else if(user.getBirthday().isAfter(LocalDate.now())) {
+        } else if(user.getBirthday().isAfter(LocalDate.now())) {
             throw new ValidationException("Указан неправильная дата рождения.");
         }
     }
