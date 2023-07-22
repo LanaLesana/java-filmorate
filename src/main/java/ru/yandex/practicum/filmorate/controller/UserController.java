@@ -43,14 +43,13 @@ public class UserController {
     }
 
     private void isValidUser(User user) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-mm-dd");
         if (user.getEmail() == null || user.getEmail().isBlank()) {
             throw new ValidationException("Указан неправильный e-mail.");
         } else if (user.getLogin() == null || user.getLogin().isBlank() || user.getLogin().contains(" ")) {
             throw new ValidationException("Логин пустой или содержит пробелы.");
         } else if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
-        } else if (user.getBirthday() == null || user.getBirthday().isAfter(LocalDate.now()) || !user.getBirthday().equals(user.getBirthday().format(formatter))) {
+        } else if (user.getBirthday() == null || user.getBirthday().isAfter(LocalDate.now())) {
             throw new ValidationException("Указан неправильная дата рождения.");
         }
     }
