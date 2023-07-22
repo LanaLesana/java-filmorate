@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-
-import javax.swing.text.DateFormatter;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -19,7 +17,7 @@ import java.util.List;
 public class UserController {
     private LinkedHashMap<Integer, User> users = new LinkedHashMap<>();
     private Integer generatedUserId = 1;
-    private final static Logger log = LoggerFactory.getLogger(UserController.class);
+    private final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping("/users")
     public List<User> findAllUsers() {
