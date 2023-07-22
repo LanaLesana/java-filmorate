@@ -7,9 +7,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Film {
-    private Integer filmId;
+    private Integer id;
     private String name;
     private String description;
-    private LocalDate date;
-    private int duration;
+    private LocalDate releaseDate;
+    private Integer duration;
 }

@@ -32,7 +32,7 @@ class UserControllerTest {
     @Test
     void addUser() {
         User createdUser = userController.addUser(new User(1, "email@gmail.com", "Login", "Name", LocalDate.of(2000, 11, 11)));
-        assertNotNull(createdUser.getUserId());
+        assertNotNull(createdUser.getId());
         assertNotNull(createdUser.getLogin());
         assertNotNull(createdUser.getName());
         assertNotNull(createdUser.getBirthday());
@@ -42,7 +42,7 @@ class UserControllerTest {
     @Test
     void update() {
         User createdUser = userController.update(new User(1, "email@gmail.com", "Login", "Name", LocalDate.of(2000, 11, 11)));
-        assertNotNull(createdUser.getUserId());
+        assertNotNull(createdUser.getId());
         assertNotNull(createdUser.getLogin());
         assertNotNull(createdUser.getName());
         assertNotNull(createdUser.getBirthday());

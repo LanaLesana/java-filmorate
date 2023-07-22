@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.controller;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -15,27 +17,27 @@ public class FilmController {
     private LinkedHashMap<Integer, Film> films = new LinkedHashMap<>();
     private Integer generatedFilmId = 1;
 
+    private final static Logger log = LoggerFactory.getLogger(FilmController.class);
+
     @GetMapping("/films")
     public List<Film> findAll() {
         return new ArrayList<>(films.values());
     }
 
     @PostMapping(value = "/films")
-
     public Film add(@RequestBody Film film) {
         isValidFilm(film);
-        film.setFilmId(generatedFilmId++);
-        films.put(film.getFilmId(), film);
+        film.setId(generatedFilmId++);
+        films.put(film.getId(), film);
         return film;
     }
 
     @PutMapping(value = "/films")
-
     public Film update(@RequestBody Film film) {
         isValidFilm(film);
-        if (films.containsKey(film.getFilmId())) {
-            films.remove(film.getFilmId());
-            films.put(film.getFilmId(), film);
+        if (films.containsKey(film.getId())) {
+            films.remove(film.getId());
+            films.put(film.getId(), film);
         }
         return film;
     }
@@ -43,11 +45,11 @@ public class FilmController {
     private void isValidFilm(Film film) {
         if (film.getName() == null || film.getName().isBlank()) {
             throw new ValidationException("Неверное название");
-        } else if (film.getDescription().length() > 200) {
+        } else if (film.getDescription()==null || film.getDescription().length() > 200) {
             throw new ValidationException("Описание превышает 200 символов.");
-        } else if (film.getDate().isBefore(LocalDate.parse("1895-12-28"))) {
+        } else if (film.getReleaseDate() == null || film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))) {
             throw new ValidationException("Неверная дата релиза.");
-        } else if (film.getDuration() < 0) {
+        } else if (film.getDuration() == null || film.getDuration() <= 0) {
             throw new ValidationException("Указана неверная продолжительность фильма.");
         }
     }
