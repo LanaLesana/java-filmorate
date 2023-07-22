@@ -17,7 +17,7 @@ public class FilmController {
     private LinkedHashMap<Integer, Film> films = new LinkedHashMap<>();
     private Integer generatedFilmId = 1;
 
-    private final static Logger log = LoggerFactory.getLogger(FilmController.class);
+    private final Logger log = LoggerFactory.getLogger(FilmController.class);
 
     @GetMapping("/films")
     public List<Film> findAll() {
@@ -45,7 +45,7 @@ public class FilmController {
     private void isValidFilm(Film film) {
         if (film.getName() == null || film.getName().isBlank()) {
             throw new ValidationException("Неверное название");
-        } else if (film.getDescription()==null || film.getDescription().length() > 200) {
+        } else if (film.getDescription() == null || film.getDescription().length() > 200) {
             throw new ValidationException("Описание превышает 200 символов.");
         } else if (film.getReleaseDate() == null || film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))) {
             throw new ValidationException("Неверная дата релиза.");
