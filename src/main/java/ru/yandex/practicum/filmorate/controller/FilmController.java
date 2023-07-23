@@ -40,8 +40,9 @@ public class FilmController {
             films.put(film.getId(), film);
             return film;
         } else {
-            throw new NotFoundException("Фильм не найден.");
+            notFound();
         }
+        return film;
     }
 
 
@@ -55,6 +56,10 @@ public class FilmController {
         } else if (film.getDuration() == null || film.getDuration() <= 0) {
             throw new ValidationException("Указана неверная продолжительность фильма.");
         }
+    }
+
+    private void notFound() {
+        throw new NotFoundException("Не найдено.");
     }
 }
 

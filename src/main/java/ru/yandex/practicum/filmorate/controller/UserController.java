@@ -38,7 +38,7 @@ public class UserController {
         if (users.containsKey(user.getId())) {
             users.put(user.getId(), user);
         } else {
-            throw new NotFoundException("Пользователь не найден.");
+            notFound();
         }
         return user;
     }
@@ -54,6 +54,10 @@ public class UserController {
         if (user.getBirthday() == null || user.getBirthday().isAfter(LocalDate.now())) {
             throw new ValidationException("Указана неправильная дата рождения.");
         }
+    }
+
+    private void notFound() {
+        throw new NotFoundException("Не найдено.");
     }
 }
 
