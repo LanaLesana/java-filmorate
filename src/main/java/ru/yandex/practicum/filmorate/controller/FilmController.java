@@ -37,8 +37,7 @@ public class FilmController {
         isValidFilm(film);
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
-        }
-        if (!films.containsKey(film.getId())) {
+        } else if (!films.containsKey(film.getId())) {
             throw new ValidationException("Фильм не добавлен.");
         }
         return film;

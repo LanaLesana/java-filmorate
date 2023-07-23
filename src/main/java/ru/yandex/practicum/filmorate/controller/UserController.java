@@ -36,8 +36,7 @@ public class UserController {
         isValidUser(user);
         if (users.containsKey(user.getId())) {
             users.put(user.getId(), user);
-        }
-        if (!users.containsKey(user.getId())) {
+        } else if (!users.containsKey(user.getId())) {
             throw new ValidationException("Пользователь не добавлен");
         }
         return user;
