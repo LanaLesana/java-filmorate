@@ -38,7 +38,7 @@ public class UserController {
             users.put(user.getId(), user);
         }
         if (!users.containsKey(user.getId())) {
-            throw new RuntimeException();
+            throw new ValidationException("Пользователь не добавлен");
         }
         return user;
     }

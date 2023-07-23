@@ -39,7 +39,7 @@ public class FilmController {
             films.put(film.getId(), film);
         }
         if (!films.containsKey(film.getId())) {
-            throw new RuntimeException();
+            throw new ValidationException("Фильм не добавлен.");
         }
         return film;
     }
