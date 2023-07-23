@@ -35,8 +35,10 @@ public class UserController {
     public User update(@Valid @RequestBody User user) {
         isValidUser(user);
         if (users.containsKey(user.getId())) {
-            users.remove(user.getId());
             users.put(user.getId(), user);
+        }
+        if (!users.containsKey(user.getId())) {
+            throw new RuntimeException();
         }
         return user;
     }

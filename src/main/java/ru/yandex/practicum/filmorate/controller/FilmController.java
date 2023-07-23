@@ -36,8 +36,10 @@ public class FilmController {
     public Film update(@RequestBody Film film) {
         isValidFilm(film);
         if (films.containsKey(film.getId())) {
-            films.remove(film.getId());
             films.put(film.getId(), film);
+        }
+        if(!films.containsKey(film.getId())) {
+            throw new RuntimeException();
         }
         return film;
     }
