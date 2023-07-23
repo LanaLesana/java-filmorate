@@ -38,7 +38,7 @@ public class FilmController {
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
         }
-        if(!films.containsKey(film.getId())) {
+        if (!films.containsKey(film.getId())) {
             throw new RuntimeException();
         }
         return film;
