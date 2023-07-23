@@ -37,8 +37,6 @@ public class UserController {
         if (users.containsKey(user.getId())) {
             users.remove(user.getId());
             users.put(user.getId(), user);
-        } else {
-            throw new ValidationException("Пользователь не добавлен.");
         }
         return user;
     }
