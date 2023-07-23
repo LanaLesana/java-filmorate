@@ -38,9 +38,13 @@ public class FilmController {
         if (films.containsKey(film.getId())) {
             films.remove(film.getId());
             films.put(film.getId(), film);
+        } else {
+            throw new ValidationException("Фильм не добавлен.");
+
         }
         return film;
-    }
+        }
+
 
     private void isValidFilm(Film film) {
         if (film.getName() == null || film.getName().isBlank()) {
