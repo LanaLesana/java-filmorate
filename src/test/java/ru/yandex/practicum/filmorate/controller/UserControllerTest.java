@@ -41,7 +41,9 @@ class UserControllerTest {
 
     @Test
     void update() {
-        User createdUser = userController.update(new User(1, "email@gmail.com", "Login", "Name", LocalDate.of(2000, 11, 11)));
+        User createdUser = userController.addUser(new User(1, "email@gmail.com", "Login", "Name", LocalDate.of(2000, 11, 11)));
+        User updatedUser = new User(1, "email@gmail.com", "UpdatedLogin", "Name", LocalDate.of(2000, 11, 11));
+        userController.update(updatedUser);
         assertNotNull(createdUser.getId());
         assertNotNull(createdUser.getLogin());
         assertNotNull(createdUser.getName());

@@ -16,9 +16,13 @@ import java.util.List;
 @RestController
 public class FilmController {
     private LinkedHashMap<Integer, Film> films = new LinkedHashMap<>();
-    private Integer generatedFilmId = 1;
+    private Integer generatedFilmId =1;
 
     private final Logger log = LoggerFactory.getLogger(FilmController.class);
+
+    public LinkedHashMap<Integer, Film> getFilms() {
+        return films;
+    }
 
     @GetMapping("/films")
     public List<Film> findAll() {

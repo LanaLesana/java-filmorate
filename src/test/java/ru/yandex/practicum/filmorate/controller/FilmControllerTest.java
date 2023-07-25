@@ -40,7 +40,9 @@ class FilmControllerTest {
 
     @Test
     void update() {
-        Film createdFilm = filmController.update(new Film(1, "FilmName", "Description", LocalDate.of(1990, 11, 11), 2));
+        Film createdFilm = filmController.add(new Film(1, "FilmName", "Description", LocalDate.of(1990, 11, 11), 2));
+        Film updatedFilm = new Film(1, "FilmNameUpdated", "Description", LocalDate.of(1990, 11, 11), 2);
+        filmController.update(updatedFilm);
         assertNotNull(createdFilm.getId());
         assertNotNull(createdFilm.getName());
         assertNotNull(createdFilm.getDescription());
