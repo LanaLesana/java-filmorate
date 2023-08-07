@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,13 +13,11 @@ import java.util.TreeSet;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
-    private UserController userController;
-
-    @AfterEach
-    public void tearDown() {
-        userController = null;
+    UserController userController;
+    @BeforeEach
+    public void init() {
+        userController = new UserController(new UserService(new InMemoryUserStorage()));
     }
-
     @Test
     void findAllUsers() {
         List<User> allUsersCreated = userController.findAllUsers();

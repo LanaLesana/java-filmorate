@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class FilmControllerTest {
     private FilmController filmController;
 
-    @AfterEach
-    public void tearDown() {
-        filmController = null;
+    @BeforeEach
+    public void init() {
+        filmController = new FilmController(new FilmService(new InMemoryFilmStorage()));
     }
 
     @Test
