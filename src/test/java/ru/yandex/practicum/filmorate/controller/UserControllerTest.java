@@ -14,10 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
     UserController userController;
+
     @BeforeEach
     public void init() {
         userController = new UserController(new UserService(new InMemoryUserStorage()));
     }
+
     @Test
     void findAllUsers() {
         List<User> allUsersCreated = userController.findAllUsers();
