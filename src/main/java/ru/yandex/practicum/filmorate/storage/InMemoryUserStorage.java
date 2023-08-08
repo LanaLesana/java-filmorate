@@ -21,10 +21,10 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User getUserById(Integer id) {
-        if (users.containsKey(id)) {
-            return users.get(id);
-        } else {
+        if (users.get(id) == null) {
             throw new NotFoundException("Пользователь не найден.");
+        } else {
+            return users.get(id);
         }
     }
 
