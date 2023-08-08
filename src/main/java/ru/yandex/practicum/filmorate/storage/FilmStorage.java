@@ -2,11 +2,11 @@ package ru.yandex.practicum.filmorate.storage;
 
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface FilmStorage {
-    HashMap<Integer, Film> getFilms();
+    Map<Integer, Film> getFilms();
 
     Film addFilm(Film film);
 
@@ -17,6 +17,4 @@ public interface FilmStorage {
     void isValidFilm(Film film);
 
     Film getFilmById(Integer id);
-
-    void notFound();
 }

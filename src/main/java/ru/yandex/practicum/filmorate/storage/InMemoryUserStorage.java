@@ -24,7 +24,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.containsKey(id)) {
             return users.get(id);
         } else {
-            return null;
+            throw new NotFoundException("Пользователь не найден.");
         }
     }
 
@@ -66,7 +66,6 @@ public class InMemoryUserStorage implements UserStorage {
         }
     }
 
-    @Override
     public void notFound() {
         throw new NotFoundException("Не найдено.");
     }

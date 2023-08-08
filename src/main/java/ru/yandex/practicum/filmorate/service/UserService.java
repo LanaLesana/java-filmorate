@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -67,7 +68,6 @@ public class UserService implements UserServiceInterface {
             userStorage.getUsers().get(friendId).getFriends().remove(user.getId());
             return true;
         } else {
-            userStorage.notFound();
             return false;
         }
     }
@@ -101,23 +101,28 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public User getUserById(Integer id) {
-        return userStorage.getUserById(id);
+
+        if (userStorage.getUserById(id) == null) {
+            throw new NotFoundException("Пользователь не найден.");
+        } else {
+            return userStorage.getUserById(id);
+        }
     }
 
     @Override
     public List<User> findAllUserFriends(Integer userId) {
-        User user = userStorage.getUserById(userId);
+        User user = getUserById(userId);
         ArrayList<User> listOfFriends = new ArrayList<>();
         ArrayList<Integer> listOfFriendsIds = new ArrayList<>(user.getFriends());
         for (Integer id : listOfFriendsIds) {
-            User friend = userStorage.getUserById(id);
+            User friend = getUserById(id);
             listOfFriends.add(friend);
         }
         return listOfFriends;
     }
 
     public void isValidId(Integer id) {
-        if (id <= 0) {
+        if (id <= 0 && userStorage.getUserById(id) != null && userStorage.getUsers().containsKey(id)) {
             throw new ValidationException("Указан неправильный id.");
         }
     }

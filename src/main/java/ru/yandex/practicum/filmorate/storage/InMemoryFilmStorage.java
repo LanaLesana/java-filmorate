@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
@@ -16,7 +17,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     private Integer generatedFilmId = 1;
 
     @Override
-    public HashMap<Integer, Film> getFilms() {
+    public Map<Integer, Film> getFilms() {
         return films;
     }
 
@@ -60,10 +61,13 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film getFilmById(Integer id) {
-        return films.get(id);
+        if (films.get(id) == null) {
+            throw new NotFoundException("Такого фильма нет.");
+        } else {
+            return films.get(id);
+        }
     }
 
-    @Override
     public void notFound() {
         throw new NotFoundException("Не найдено.");
     }

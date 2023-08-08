@@ -18,5 +18,4 @@ public interface UserStorage {
 
     void isValidUser(User user);
 
-    void notFound();
 }
