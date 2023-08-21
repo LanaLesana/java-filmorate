@@ -28,7 +28,7 @@ class FilmControllerTest {
 
     @Test
     void add() {
-        Film createdFilm = filmController.add(new Film(1, "FilmName", "Description", LocalDate.of(1990, 11, 11), 2, new TreeSet<>()));
+        Film createdFilm = filmController.add(new Film(1, "FilmName", "Description", LocalDate.of(1990, 11, 11), 2, new TreeSet<>(), "Genre", "Rating"));
         assertNotNull(createdFilm.getId());
         assertNotNull(createdFilm.getName());
         assertNotNull(createdFilm.getDescription());
@@ -37,8 +37,8 @@ class FilmControllerTest {
 
     @Test
     void update() {
-        Film createdFilm = filmController.add(new Film(1, "FilmName", "Description", LocalDate.of(1990, 11, 11), 2, new TreeSet<>()));
-        Film updatedFilm = new Film(1, "FilmNameUpdated", "Description", LocalDate.of(1990, 11, 11), 2, new TreeSet<>());
+        Film createdFilm = filmController.add(new Film(1, "FilmName", "Description", LocalDate.of(1990, 11, 11), 2, new TreeSet<>(), "Genre", "Rating"));
+        Film updatedFilm = new Film(1, "FilmNameUpdated", "Description", LocalDate.of(1990, 11, 11), 2, new TreeSet<>(),"Genre", "Rating");
         filmController.update(updatedFilm);
         assertNotNull(createdFilm.getId());
         assertNotNull(createdFilm.getName());

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Email;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.TreeSet;
 
 @Data
@@ -17,4 +18,5 @@ public class User {
     private String name;
     private LocalDate birthday;
     private TreeSet<Integer> friends;
+    private HashMap<Integer, Boolean> friendshipStatus;
 }
