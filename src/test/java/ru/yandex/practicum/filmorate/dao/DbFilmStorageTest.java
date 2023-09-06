@@ -35,7 +35,7 @@ public class DbFilmStorageTest {
         film.setDuration(67);
         film.setReleaseDate(LocalDate.parse("1998-12-09"));
         film.setMpa(new Mpa(1, "Mpa"));
-        film.setGenre(new Genre(1, "Genre"));
+        //film.setGenre(new Genre(1, "Genre"));
 
         dbFilmStorage.addFilm(film);
 
@@ -51,7 +51,7 @@ public class DbFilmStorageTest {
         film.setDuration(67);
         film.setReleaseDate(LocalDate.parse("1998-12-09"));
         film.setMpa(new Mpa(1, "Mpa"));
-        film.setGenre(new Genre(1, "Genre"));
+        //film.setGenre(new Genre(1, "Genre"));
 
         Film newFilm = dbFilmStorage.addFilm(film);
         assertEquals(film, newFilm);
@@ -65,7 +65,7 @@ public class DbFilmStorageTest {
         film.setDuration(67);
         film.setReleaseDate(LocalDate.parse("1998-12-09"));
         film.setMpa(new Mpa(1, "Mpa"));
-        film.setGenre(new Genre(1, "Genre"));
+        //film.setGenre(new Genre(1, "Genre"));
 
         dbFilmStorage.addFilm(film);
 
@@ -75,7 +75,7 @@ public class DbFilmStorageTest {
         newFilm.setDuration(67);
         newFilm.setReleaseDate(LocalDate.parse("1998-12-09"));
         newFilm.setMpa(new Mpa(1, "Mpa"));
-        newFilm.setGenre(new Genre(1, "Genre"));
+        //newFilm.setGenre(new Genre(1, "Genre"));
         film.setId(newFilm.getId());
 
         Film updatedFilm = dbFilmStorage.updateFilm(newFilm);
@@ -92,7 +92,7 @@ public class DbFilmStorageTest {
         film.setDuration(67);
         film.setReleaseDate(LocalDate.parse("1998-12-09"));
         film.setMpa(new Mpa(1, "Mpa"));
-        film.setGenre(new Genre(1, "Genre"));
+        //film.setGenre(new Genre(1, "Genre"));
 
         dbFilmStorage.addFilm(film);
 
@@ -102,7 +102,7 @@ public class DbFilmStorageTest {
         newFilm.setDuration(67);
         newFilm.setReleaseDate(LocalDate.parse("1998-12-09"));
         newFilm.setMpa(new Mpa(1, "Mpa"));
-        newFilm.setGenre(new Genre(1, "Genre"));
+        //newFilm.setGenre(new Genre(1, "Genre"));
         film.setId(newFilm.getId());
 
         User user = new User();

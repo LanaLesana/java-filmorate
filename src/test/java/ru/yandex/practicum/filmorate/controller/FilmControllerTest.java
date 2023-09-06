@@ -16,6 +16,7 @@ import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,7 +32,7 @@ class FilmControllerTest {
 
     @Test
     void add() {
-        Film createdFilm = filmController.add(new Film(1, "FilmName", "Description", LocalDate.of(1990, 11, 11), 2, new TreeSet<>(), new ArrayList<>(),new Genre(1,"name"), new Mpa(1,"name"),1));
+        Film createdFilm = filmController.add(new Film(1, "FilmName", "Description", LocalDate.of(1990, 11, 11), 2, new TreeSet<>(), new TreeSet<>(), new Mpa(1,"name"),1));
         assertNotNull(createdFilm.getId());
         assertNotNull(createdFilm.getName());
         assertNotNull(createdFilm.getDescription());
@@ -40,8 +41,8 @@ class FilmControllerTest {
 
     @Test
     void update() {
-        Film createdFilm = filmController.add(new Film(1, "FilmName", "Description", LocalDate.of(1990, 11, 11), 2, new TreeSet<>(),new ArrayList<>(), new Genre(1,"name"), new Mpa(1,"name"),1));
-        Film updatedFilm = new Film(1, "FilmNameUpdated", "Description", LocalDate.of(1990, 11, 11), 2, new TreeSet<>(),new ArrayList<>(),new Genre(1,"name"), new Mpa(1,"name"),1);
+        Film createdFilm = filmController.add(new Film());
+        Film updatedFilm = new Film();
         filmController.update(updatedFilm);
         assertNotNull(createdFilm.getId());
         assertNotNull(createdFilm.getName());
