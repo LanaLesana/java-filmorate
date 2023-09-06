@@ -139,7 +139,8 @@ public class DbFilmStorageImpl implements DbFilmStorage {
 @Override
 public List<Film> findAllFilms() {
     return jdbcTemplate.query(
-            "SELECT f.*, m.name AS mpa_name FROM films AS f INNER JOIN mpa AS m ON f.mpa_id = m.mpa_id",
+            "SELECT f.*, m.name AS mpa_name FROM films AS f INNER JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
+                    "JOIN film_genre as fg ON f.film_id = fg.film_id JOIN genre AS g ON fg.genre_id = g.genre_id",
             this::filmBuilder);
 }
 
@@ -151,10 +152,12 @@ public List<Film> findAllFilms() {
                 .description(resultSet.getString("description"))
                 .releaseDate(resultSet.getDate("release_date").toLocalDate())
                 .duration(resultSet.getInt("duration"))
-                .mpa(new Mpa(resultSet.getInt("mpa_id"), resultSet.getString("MPA_NAME")))
+                //.mpa(new Mpa(resultSet.getInt("mpa_id"), resultSet.getString("mpa_name")))
                 .build();
         addFilmGenres(film);
         addFilmLikes(film);
+        film.setGenre(buildGenre(resultSet,rowNum));
+        film.setMpa(buildMpa(resultSet,rowNum));
         return film;
     }
 @Override
