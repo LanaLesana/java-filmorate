@@ -7,7 +7,7 @@ import ru.yandex.practicum.filmorate.model.Mpa;
 import java.util.List;
 
 public interface FilmServiceInterface {
-    boolean addLike(Integer filmId, Integer userId);
+    void addLike(Integer filmId, Integer userId);
 
     boolean removeLike(Film film, Integer userId);
 

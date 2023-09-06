@@ -34,4 +34,5 @@ public interface DbFilmStorage {
     void removeFilmGenres(int filmId);
 
     Film addFilmLikes(Film film);
+
 }

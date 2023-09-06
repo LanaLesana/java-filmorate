@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.DbFilmStorage;
@@ -9,7 +8,6 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -21,17 +19,19 @@ public class FilmService implements FilmServiceInterface {
     public final DbFilmStorage dbFilmStorage;
 
     @Override
-    public boolean addLike(Integer filmId, Integer userId) {
+    public void addLike(Integer filmId, Integer userId) {
         Film film = dbFilmStorage.getFilmById(filmId);
         isValidFilm(film);
-        if (film.getLikes() == null) {
-            film.setLikes(new TreeSet<>());
-        }
         if (userId != null) {
+            log.info("Adding like to film " + film.getId() + "from user " + userId);
+            if(film.getLikes() == null) {
+                film.setLikes(new TreeSet<>());
+                film.getLikes().add(userId);
+            }
+            log.info("Like has been added.");
             dbFilmStorage.addLike(filmId, userId);
-            return true;
         } else {
-            return false;
+            log.info("User Id is null");
         }
     }
 

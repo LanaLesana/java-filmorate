@@ -49,7 +49,11 @@ public class DbFilmStorageImpl implements DbFilmStorage {
                     "GROUP BY f.film_id\n" +
                     "ORDER BY COUNT(fl.user_id) DESC\n" +
                     "LIMIT ?";
-            return jdbcTemplate.query(sql,this::filmBuilder, count);
+            if(jdbcTemplate.query(sql,this::filmBuilder, count).isEmpty()) {
+                return findAllFilms();
+            } else {
+                return jdbcTemplate.query(sql,this::filmBuilder, count);
+            }
         }
 
         @Override
