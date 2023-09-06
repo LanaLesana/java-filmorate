@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
@@ -14,12 +15,8 @@ import java.util.TreeSet;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
+    @Autowired
     UserController userController;
-
-    @BeforeEach
-    public void init() {
-        userController = new UserController(new UserService(new InMemoryUserStorage()));
-    }
 
     @Test
     void findAllUsers() {

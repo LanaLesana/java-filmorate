@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ErrorResponse;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.service.FilmServiceInterface;
 
 import javax.validation.Valid;
@@ -90,6 +92,25 @@ public class FilmController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+    @GetMapping("/genres/{id}")
+    public Genre getGenreById(@PathVariable int id) {
+        return filmService.getGenre(id);
+    }
+
+    @GetMapping("/genres")
+    public List<Genre> getGenres() {
+        return filmService.getAllGenres();
+    }
+
+    @GetMapping("/mpa/{id}")
+    public Mpa getMpa(@PathVariable int id) {
+        return filmService.getMpa(id);
+    }
+
+    @GetMapping("/mpa")
+    public List<Mpa> getAll() {
+        return filmService.getAllMpa();
     }
 }
 
