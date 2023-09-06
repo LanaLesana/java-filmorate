@@ -77,6 +77,10 @@ public class DbFilmStorageImpl implements DbFilmStorage {
             }
             addFilmGenres(film);
             addFilmLikes(film);
+            updateFilmGenreTable(film);
+
+            Set<Genre> genres = getFilmGenres(film.getId());
+            film.setGenres(genres);
             int mpaId = film.getMpa().getId();
             film.setMpa(getMpaById(mpaId));
 
@@ -85,7 +89,7 @@ public class DbFilmStorageImpl implements DbFilmStorage {
 //                Genre acquiredGenre = getGenreById(genre.getId());
 //                film.getGenres().add(acquiredGenre);
 //            }
-            updateFilmGenreTable(film);
+
             return film;
         }
             public static Map<String, Object> filmToMap(Film film) {
@@ -95,6 +99,7 @@ public class DbFilmStorageImpl implements DbFilmStorage {
                 values.put("release_date", film.getReleaseDate());
                 values.put("duration", film.getDuration());
                 values.put("mpa", film.getMpa());
+                values.put("genres", film.getGenres());
                 return values;
             }
 
@@ -330,7 +335,7 @@ public Film getFilmById(Integer id) {
     Set<Genre> getFilmGenres(Integer filmId) {
 
         SqlRowSet genreRows = jdbcTemplate
-                .queryForRowSet("SELECT genre_id FROM film_genres WHERE film_id = ?", filmId);
+                .queryForRowSet("SELECT genre_id FROM film_genre WHERE film_id = ?", filmId);
 
         Set<Genre> genres = new TreeSet<>(Comparator.comparing(Genre::getId));
 
