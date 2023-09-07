@@ -24,12 +24,15 @@ public interface DbFilmStorage {
     List<Film> findAllFilms();
 
     Film getFilmById(Integer id);
+
     Genre getGenreById(int id);
 
     List<Genre> getGenreByFilmId(int id);
 
     List<Genre> getAllGenres();
+
     Mpa getMpaById(int mpaId);
+
     List<Mpa> getAllMpa();
 
     void removeFilm(Integer id);

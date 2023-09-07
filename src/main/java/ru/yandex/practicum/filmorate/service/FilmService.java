@@ -24,7 +24,7 @@ public class FilmService implements FilmServiceInterface {
         isValidFilm(film);
         if (userId != null) {
             log.info("Adding like to film " + film.getId() + "from user " + userId);
-            if(film.getLikes() == null) {
+            if (film.getLikes() == null) {
                 film.setLikes(new TreeSet<>());
                 film.getLikes().add(userId);
             }
@@ -92,6 +92,7 @@ public class FilmService implements FilmServiceInterface {
             throw new ValidationException("Указана неверная продолжительность фильма.");
         }
     }
+
     public Genre getGenre(int id) {
         return dbFilmStorage.getGenreById(id);
     }
@@ -99,6 +100,7 @@ public class FilmService implements FilmServiceInterface {
     public List<Genre> getAllGenres() {
         return dbFilmStorage.getAllGenres();
     }
+
     public Mpa getMpa(int id) {
         return dbFilmStorage.getMpaById(id);
     }

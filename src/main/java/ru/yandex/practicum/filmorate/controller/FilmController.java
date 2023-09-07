@@ -40,24 +40,10 @@ public class FilmController {
         return filmService.updateFilm(film);
     }
 
-//    @PutMapping("/films/{id}/like/{userId}")
-//    public ResponseEntity<Film> addLike(@PathVariable Integer id, @PathVariable Integer userId) {
-//        Film existingFilm = filmService.getFilmById(id);
-//        if (existingFilm == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        boolean added = filmService.addLike(id, userId);
-//
-//        if (added) {
-//            return ResponseEntity.ok(existingFilm);
-//        } else {
-//            return ResponseEntity.badRequest().build();
-//        }
-//    }
-@PutMapping("/films/{id}/like/{userId}")
-public void addLike(@PathVariable Integer id, @PathVariable Integer userId) {
-    filmService.addLike(id, userId);
-}
+    @PutMapping("/films/{id}/like/{userId}")
+    public void addLike(@PathVariable Integer id, @PathVariable Integer userId) {
+        filmService.addLike(id, userId);
+    }
 
     @DeleteMapping("/films/{id}/like/{userId}")
     public ResponseEntity<Object> removeLike(@PathVariable Integer id,
@@ -97,6 +83,7 @@ public void addLike(@PathVariable Integer id, @PathVariable Integer userId) {
             return ResponseEntity.notFound().build();
         }
     }
+
     @GetMapping("/genres/{id}")
     public Genre getGenreById(@PathVariable int id) {
         return filmService.getGenre(id);

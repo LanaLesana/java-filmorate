@@ -20,7 +20,6 @@ public class Film {
     private Integer duration;
     private TreeSet<Integer> likes;
     private Set<Genre> genres = new TreeSet<>();
-    //private Genre genre;
     private Mpa mpa;
     private Integer mpaId;
 

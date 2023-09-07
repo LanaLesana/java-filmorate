@@ -49,7 +49,7 @@ public class UserService implements UserServiceInterface {
         if (friend.getFriends() == null) {
             friend.setFriends(new TreeSet<>());
         }
-        if (dbUserStorage.getUserById(userId)!= null && dbUserStorage.getUserById(friendId) != null) {
+        if (dbUserStorage.getUserById(userId) != null && dbUserStorage.getUserById(friendId) != null) {
             dbUserStorage.addFriend(userId, friendId);
             dbUserStorage.updateUser(getUserById(userId));
             dbUserStorage.updateUser(getUserById(friendId));
@@ -63,7 +63,7 @@ public class UserService implements UserServiceInterface {
     public boolean removeFriend(User user, Integer friendId) {
         isValidId(user.getId());
         isValidId(friendId);
-        if (dbUserStorage.getUserById(user.getId())!= null && dbUserStorage.getUserById(friendId) != null) {
+        if (dbUserStorage.getUserById(user.getId()) != null && dbUserStorage.getUserById(friendId) != null) {
             dbUserStorage.removeFriend(user, friendId);
             return true;
         } else {
@@ -96,6 +96,7 @@ public class UserService implements UserServiceInterface {
             throw new ValidationException("Указан неправильный id.");
         }
     }
+
     public void isValidUser(User user) {
         if (user.getEmail() == null || user.getEmail().isBlank()) {
             throw new ValidationException("Указан неправильный e-mail.");

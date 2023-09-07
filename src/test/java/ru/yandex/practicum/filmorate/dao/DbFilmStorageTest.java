@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -27,6 +26,7 @@ public class DbFilmStorageTest {
     void removeAll() {
         dbFilmStorage.removeAllFilms();
     }
+
     @Test
     void getFilmByIdTest() {
         Film film = new Film();
@@ -35,7 +35,6 @@ public class DbFilmStorageTest {
         film.setDuration(67);
         film.setReleaseDate(LocalDate.parse("1998-12-09"));
         film.setMpa(new Mpa(1, "Mpa"));
-        //film.setGenre(new Genre(1, "Genre"));
 
         dbFilmStorage.addFilm(film);
 
@@ -51,7 +50,6 @@ public class DbFilmStorageTest {
         film.setDuration(67);
         film.setReleaseDate(LocalDate.parse("1998-12-09"));
         film.setMpa(new Mpa(1, "Mpa"));
-        //film.setGenre(new Genre(1, "Genre"));
 
         Film newFilm = dbFilmStorage.addFilm(film);
         assertEquals(film, newFilm);
@@ -65,7 +63,6 @@ public class DbFilmStorageTest {
         film.setDuration(67);
         film.setReleaseDate(LocalDate.parse("1998-12-09"));
         film.setMpa(new Mpa(1, "Mpa"));
-        //film.setGenre(new Genre(1, "Genre"));
 
         dbFilmStorage.addFilm(film);
 
@@ -75,7 +72,6 @@ public class DbFilmStorageTest {
         newFilm.setDuration(67);
         newFilm.setReleaseDate(LocalDate.parse("1998-12-09"));
         newFilm.setMpa(new Mpa(1, "Mpa"));
-        //newFilm.setGenre(new Genre(1, "Genre"));
         film.setId(newFilm.getId());
 
         Film updatedFilm = dbFilmStorage.updateFilm(newFilm);
@@ -92,7 +88,6 @@ public class DbFilmStorageTest {
         film.setDuration(67);
         film.setReleaseDate(LocalDate.parse("1998-12-09"));
         film.setMpa(new Mpa(1, "Mpa"));
-        //film.setGenre(new Genre(1, "Genre"));
 
         dbFilmStorage.addFilm(film);
 
@@ -102,7 +97,6 @@ public class DbFilmStorageTest {
         newFilm.setDuration(67);
         newFilm.setReleaseDate(LocalDate.parse("1998-12-09"));
         newFilm.setMpa(new Mpa(1, "Mpa"));
-        //newFilm.setGenre(new Genre(1, "Genre"));
         film.setId(newFilm.getId());
 
         User user = new User();

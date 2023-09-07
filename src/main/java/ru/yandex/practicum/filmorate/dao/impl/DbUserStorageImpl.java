@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -25,6 +24,7 @@ public class DbUserStorageImpl implements DbUserStorage {
     public DbUserStorageImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
     @Override
     public User addUser(User user) {
         if (user.getId() == null) {
@@ -39,6 +39,7 @@ public class DbUserStorageImpl implements DbUserStorage {
         }
         return user;
     }
+
     private static HashMap<String, Object> userToRow(User user) {
         HashMap<String, Object> values = new HashMap<>();
         values.put("email", user.getEmail());
@@ -97,8 +98,8 @@ public class DbUserStorageImpl implements DbUserStorage {
                 .filter(user2Friends::contains)
                 .collect(Collectors.toList());
         ArrayList<User> mutualFriends = new ArrayList<>();
-        for (Integer id:
-             mutualFriendsIds) {
+        for (Integer id :
+                mutualFriendsIds) {
             mutualFriends.add(getUserById(id));
         }
         return mutualFriends;
@@ -119,8 +120,8 @@ public class DbUserStorageImpl implements DbUserStorage {
                 "SELECT friend_id FROM friend_list WHERE user_id = ?",
                 (resultSet, rowNum) -> resultSet.getInt("friend_id"), userId);
         List<User> friends = new ArrayList<>();
-        for (Integer id:
-             friendsId) {
+        for (Integer id :
+                friendsId) {
             friends.add(getUserById(id));
         }
         return friends;
@@ -147,6 +148,7 @@ public class DbUserStorageImpl implements DbUserStorage {
             return user;
         };
     }
+
     public void populateFriendStatusMap(User user) {
         String sql = "SELECT friend_id FROM friend_list WHERE user_id = ?";
         HashMap<Integer, Boolean> friendStatusMap = new HashMap<>();
@@ -166,10 +168,12 @@ public class DbUserStorageImpl implements DbUserStorage {
         int count = jdbcTemplate.queryForObject(sql, new Object[]{userId1, userId2, userId2, userId1}, Integer.class);
         return count == 2;
     }
+
     @Override
     public void removeUser(Integer id) {
         jdbcTemplate.update("DELETE FROM users WHERE user_id = ? ", id);
     }
+
     @Override
     public void removeAllUsers() {
         jdbcTemplate.update("DELETE FROM users");
