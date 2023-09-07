@@ -24,6 +24,13 @@ public class Film {
     private Mpa mpa;
     private Integer mpaId;
 
+    public Film(String name, String description, LocalDate releaseDate, Integer duration, Mpa mpa) {
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+        this.mpa = mpa;
+    }
 
     public void setMpa(Mpa mpa) {
         this.mpa = mpa;

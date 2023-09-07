@@ -17,10 +17,17 @@ public interface DbFilmStorage {
 
     Film updateFilm(Film film);
 
+    boolean deleteAllGenresFromFilm(long filmId);
+
+    boolean addGenreToFilm(long filmId, int genreId);
+
     List<Film> findAllFilms();
 
     Film getFilmById(Integer id);
     Genre getGenreById(int id);
+
+    List<Genre> getGenreByFilmId(int id);
+
     List<Genre> getAllGenres();
     Mpa getMpaById(int mpaId);
     List<Mpa> getAllMpa();
