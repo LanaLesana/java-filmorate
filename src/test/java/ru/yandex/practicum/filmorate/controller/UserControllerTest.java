@@ -1,26 +1,23 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserControllerTest {
-    private UserController userController;
+    UserController userController;
 
     @BeforeEach
-    public void setUp() {
-        userController = new UserController();
-    }
-
-    @AfterEach
-    public void tearDown() {
-        userController = null;
+    public void init() {
+        userController = new UserController(new UserService(new InMemoryUserStorage()));
     }
 
     @Test
@@ -31,7 +28,7 @@ class UserControllerTest {
 
     @Test
     void addUser() {
-        User createdUser = userController.addUser(new User(1, "email@gmail.com", "Login", "Name", LocalDate.of(2000, 11, 11)));
+        User createdUser = userController.addUser(new User(1, "email@gmail.com", "Login", "Name", LocalDate.of(2000, 11, 11), new TreeSet<>()));
         assertNotNull(createdUser.getId());
         assertNotNull(createdUser.getLogin());
         assertNotNull(createdUser.getName());
@@ -41,8 +38,8 @@ class UserControllerTest {
 
     @Test
     void update() {
-        User createdUser = userController.addUser(new User(1, "email@gmail.com", "Login", "Name", LocalDate.of(2000, 11, 11)));
-        User updatedUser = new User(1, "email@gmail.com", "UpdatedLogin", "Name", LocalDate.of(2000, 11, 11));
+        User createdUser = userController.addUser(new User(1, "email@gmail.com", "Login", "Name", LocalDate.of(2000, 11, 11), new TreeSet<>()));
+        User updatedUser = new User(1, "email@gmail.com", "UpdatedLogin", "Name", LocalDate.of(2000, 11, 11), new TreeSet<>());
         userController.update(updatedUser);
         assertNotNull(createdUser.getId());
         assertNotNull(createdUser.getLogin());
