@@ -24,6 +24,7 @@ public class DbUserStorageTest {
     void removeAll() {
         bdUserStorage.removeAllUsers();
     }
+
     @Test
     void getUserByIdTest() {
         User user = new User();
