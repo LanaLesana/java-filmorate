@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dao.DbUserStorage;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDateTime;
@@ -27,17 +28,22 @@ public class DbUserStorageImpl implements DbUserStorage {
 
     @Override
     public User addUser(User user) {
-        if (user.getId() == null) {
-            SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-                    .withTableName("users")
-                    .usingGeneratedKeyColumns("user_id");
-            int id = simpleJdbcInsert.executeAndReturnKey(userToRow(user)).intValue();
-            user.setId(id);
+        if (getUserByLogin(user.getLogin()) != null && getUserByLogin(user.getLogin()).equals(user)) {
+            log.error("Попытка добавить существующего пользователя", user.getLogin());
+            throw new ValidationException("Такой пользователь уже существует в базе " + user.getLogin());
         } else {
-            jdbcTemplate.update("UPDATE users SET name = ?, email = ? WHERE user_id = ?",
-                    user.getName(), user.getEmail(), user.getId());
+            if (user.getId() == null) {
+                SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                        .withTableName("users")
+                        .usingGeneratedKeyColumns("user_id");
+                int id = simpleJdbcInsert.executeAndReturnKey(userToRow(user)).intValue();
+                user.setId(id);
+            } else {
+                jdbcTemplate.update("UPDATE users SET name = ?, email = ? WHERE user_id = ?",
+                        user.getName(), user.getEmail(), user.getId());
+            }
+            return user;
         }
-        return user;
     }
 
     private static HashMap<String, Object> userToRow(User user) {
@@ -111,6 +117,15 @@ public class DbUserStorageImpl implements DbUserStorage {
             return jdbcTemplate.queryForObject("SELECT * FROM users WHERE user_id = ?", userRowMapper(), id);
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("Пользователь с id " + id + " не найден.");
+        }
+    }
+
+    private User getUserByLogin(String login) {
+        try {
+            String sqlQuery = "SELECT * FROM users WHERE login = ?";
+            return jdbcTemplate.queryForObject(sqlQuery, userRowMapper(), login);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
         }
     }
 

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.DbFilmStorage;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -19,19 +20,25 @@ public class FilmService implements FilmServiceInterface {
     public final DbFilmStorage dbFilmStorage;
 
     @Override
-    public void addLike(Integer filmId, Integer userId) {
-        Film film = dbFilmStorage.getFilmById(filmId);
-        isValidFilm(film);
-        if (userId != null) {
-            log.info("Adding like to film " + film.getId() + "from user " + userId);
-            if (film.getLikes() == null) {
-                film.setLikes(new TreeSet<>());
-                film.getLikes().add(userId);
+    public boolean addLike(Integer filmId, Integer userId) {
+        try {
+            Film film = dbFilmStorage.getFilmById(filmId);
+            isValidFilm(film);
+            if (userId != null) {
+                log.info("Adding like to film " + film.getId() + "from user " + userId);
+                if (film.getLikes() == null) {
+                    film.setLikes(new TreeSet<>());
+                    film.getLikes().add(userId);
+                }
+                log.info("Like has been added.");
+                dbFilmStorage.addLike(filmId, userId);
+                return true;
+            } else {
+                log.info("User Id is null");
+                return false;
             }
-            log.info("Like has been added.");
-            dbFilmStorage.addLike(filmId, userId);
-        } else {
-            log.info("User Id is null");
+        } catch (NotFoundException e) {
+            return false;
         }
     }
 

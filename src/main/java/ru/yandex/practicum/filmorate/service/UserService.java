@@ -39,25 +39,31 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public boolean addFriend(Integer userId, Integer friendId) {
-        isValidId(userId);
-        isValidId(friendId);
-        User user = dbUserStorage.getUserById(userId);
-        User friend = dbUserStorage.getUserById(friendId);
-        if (user.getFriends() == null) {
-            user.setFriends(new TreeSet<>());
-        }
-        if (friend.getFriends() == null) {
-            friend.setFriends(new TreeSet<>());
-        }
-        if (dbUserStorage.getUserById(userId) != null && dbUserStorage.getUserById(friendId) != null) {
-            dbUserStorage.addFriend(userId, friendId);
-            dbUserStorage.updateUser(getUserById(userId));
-            dbUserStorage.updateUser(getUserById(friendId));
-            return true;
+        if (!userId.equals(friendId)) {
+            isValidId(userId);
+            isValidId(friendId);
+            User user = dbUserStorage.getUserById(userId);
+            User friend = dbUserStorage.getUserById(friendId);
+            if (user.getFriends() == null) {
+                user.setFriends(new TreeSet<>());
+            }
+            if (friend.getFriends() == null) {
+                friend.setFriends(new TreeSet<>());
+            }
+            if (dbUserStorage.getUserById(userId) != null && dbUserStorage.getUserById(friendId) != null) {
+                dbUserStorage.addFriend(userId, friendId);
+                dbUserStorage.updateUser(getUserById(userId));
+                dbUserStorage.updateUser(getUserById(friendId));
+                getUserById(userId).getFriendshipStatus().put(friendId, true);
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
     }
+
 
     @Override
     public boolean removeFriend(User user, Integer friendId) {

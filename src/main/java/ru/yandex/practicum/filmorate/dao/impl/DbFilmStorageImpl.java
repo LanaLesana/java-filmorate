@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dao.DbFilmStorage;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -64,42 +65,49 @@ public class DbFilmStorageImpl implements DbFilmStorage {
 
     @Override
     public Film addFilm(Film film) {
-        java.util.Date date = Date.from(film.getReleaseDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
-        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement("INSERT INTO films (name, description, release_date, duration, mpa_id) " +
-                    "VALUES (?, ?, ?, ?, ?)", new String[]{"film_id"});
-            ps.setString(1, film.getName());
-            ps.setString(2, film.getDescription());
-            ps.setDate(3, sqlDate);
-            ps.setInt(4, film.getDuration());
-            ps.setInt(5, film.getMpa().getId());
-            return ps;
-        }, keyHolder);
-        Integer keyFilm = keyHolder.getKey().intValue();
+        if (getFilmByName(film.getName()) != null && getFilmByName(film.getName()).equals(film)) {
+            log.error("Попытка добавить дубликат", film.getName());
+            throw new ValidationException("Такой фильм уже существует в базе" + film.getName());
+        } else {
+            isValidGenre(film);
+            java.util.Date date = Date.from(film.getReleaseDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(con -> {
+                PreparedStatement ps = con.prepareStatement("INSERT INTO films (name, description, release_date, duration, mpa_id) " +
+                        "VALUES (?, ?, ?, ?, ?)", new String[]{"film_id"});
+                ps.setString(1, film.getName());
+                ps.setString(2, film.getDescription());
+                ps.setDate(3, sqlDate);
+                ps.setInt(4, film.getDuration());
+                ps.setInt(5, film.getMpa().getId());
+                return ps;
+            }, keyHolder);
+            Integer keyFilm = keyHolder.getKey().intValue();
 
-        if (film.getGenres() == null) {
+            if (film.getGenres() == null) {
+                return getFilmById(keyFilm);
+            }
+            List<Genre> genresList = new ArrayList<>();
+            for (Genre genres : film.getGenres()) {
+                genresList.add(genres);
+            }
+
+            jdbcTemplate.batchUpdate("INSERT INTO FILM_GENRE (film_id, genre_id) VALUES(?,?);", new BatchPreparedStatementSetter() {
+                @Override
+                public void setValues(PreparedStatement ps, int i) throws SQLException {
+                    ps.setInt(1, keyFilm);
+                    ps.setInt(2, genresList.get(i).getId());
+                }
+
+                @Override
+                public int getBatchSize() {
+                    return genresList.size();
+                }
+            });
             return getFilmById(keyFilm);
         }
-        List<Genre> genresList = new ArrayList<>();
-        for (Genre genres : film.getGenres()) {
-            genresList.add(genres);
-        }
 
-        jdbcTemplate.batchUpdate("INSERT INTO FILM_GENRE (film_id, genre_id) VALUES(?,?);", new BatchPreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement ps, int i) throws SQLException {
-                ps.setInt(1, keyFilm);
-                ps.setInt(2, genresList.get(i).getId());
-            }
-
-            @Override
-            public int getBatchSize() {
-                return genresList.size();
-            }
-        });
-        return getFilmById(keyFilm);
     }
 
     public static Map<String, Object> filmToMap(Film film) {
@@ -215,6 +223,17 @@ public class DbFilmStorageImpl implements DbFilmStorage {
             return jdbcTemplate.queryForObject(sqlQuery, this::filmBuilder, id);
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("Фильм с id " + id + " не найден.");
+        }
+    }
+
+    private Film getFilmByName(String name) {
+        try {
+            String sqlQuery = "SELECT DISTINCT f.*, m.mpa_name FROM films AS f " +
+                    "LEFT JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
+                    "LEFT JOIN film_genre AS fg ON f.film_id = fg.film_id WHERE f.name = ?";
+            return jdbcTemplate.queryForObject(sqlQuery, this::filmBuilder, name);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
         }
     }
 
@@ -400,5 +419,16 @@ public class DbFilmStorageImpl implements DbFilmStorage {
 
     }
 
+    private void isValidGenre(Film film) {
+        if (film.getGenres() != null) {
+            for (Genre genre :
+                    film.getGenres()) {
+                if (genre.getId() == null) {
+                    log.error("Передается фильм с некорректым id жанра" + genre.getId());
+                    throw new ValidationException("Передается фильм с некорректым id жанра" + genre.getId());
+                }
+            }
+        }
+    }
 }
 

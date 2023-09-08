@@ -3,10 +3,9 @@ package ru.yandex.practicum.filmorate.model;
 import java.time.LocalDate;
 import java.util.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
@@ -14,8 +13,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Film {
     private Integer id;
+    @NotNull(message = "Name cannot be null")
     private String name;
+    @NotNull(message = "Description cannot be null")
     private String description;
+    @NotNull(message = "Date cannot be null")
     private LocalDate releaseDate;
     private Integer duration;
     private TreeSet<Integer> likes;
@@ -35,6 +37,21 @@ public class Film {
         this.mpa = mpa;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Film film = (Film) o;
+        return Objects.equals(name, film.name) &&
+                Objects.equals(description, film.description) &&
+                Objects.equals(releaseDate, film.releaseDate) &&
+                Objects.equals(duration, film.duration);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, releaseDate, duration);
+    }
 }
 
 

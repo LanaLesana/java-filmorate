@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.exception.ErrorResponse;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -41,8 +42,25 @@ public class FilmController {
     }
 
     @PutMapping("/films/{id}/like/{userId}")
-    public void addLike(@PathVariable Integer id, @PathVariable Integer userId) {
-        filmService.addLike(id, userId);
+    public ResponseEntity<Object> addLike(@PathVariable Integer id,
+                                          @PathVariable Integer userId) {
+        Film existingFilm = filmService.getFilmById(id);
+        if (existingFilm == null) {
+            ErrorResponse errorResponse = new ErrorResponse("Фильм с ID " + id + " не существует.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
+        try {
+            boolean added = filmService.addLike(id, userId);
+            if (added) {
+                return ResponseEntity.ok(existingFilm);
+            } else {
+                ErrorResponse errorResponse = new ErrorResponse("Пользователь с ID " + userId + " не найден.");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+            }
+        } catch (ValidationException ex) {
+            ErrorResponse errorResponse = new ErrorResponse(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
     }
 
     @DeleteMapping("/films/{id}/like/{userId}")
@@ -102,6 +120,15 @@ public class FilmController {
     @GetMapping("/mpa")
     public List<Mpa> getAll() {
         return filmService.getAllMpa();
+    }
+
+    @ControllerAdvice
+    public class CustomExceptionHandler {
+        @ExceptionHandler(ValidationException.class)
+        public ResponseStatusException handleValidationException(ValidationException ex) {
+            return new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+        }
+
     }
 }
 
