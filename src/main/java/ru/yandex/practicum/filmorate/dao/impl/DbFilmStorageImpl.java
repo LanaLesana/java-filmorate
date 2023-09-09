@@ -16,12 +16,11 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -70,8 +69,8 @@ public class DbFilmStorageImpl implements DbFilmStorage {
             throw new ValidationException("Такой фильм уже существует в базе" + film.getName());
         } else {
             isValidGenre(film);
-            java.util.Date date = Date.from(film.getReleaseDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
-            java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+            LocalDate date = film.getReleaseDate();
+            java.sql.Date sqlDate = java.sql.Date.valueOf(date);
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(con -> {
                 PreparedStatement ps = con.prepareStatement("INSERT INTO films (name, description, release_date, duration, mpa_id) " +

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.DbUserStorage;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -39,21 +40,21 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public boolean addFriend(Integer userId, Integer friendId) {
+        isValidId(userId);
+        isValidId(friendId);
         if (!userId.equals(friendId)) {
-            isValidId(userId);
-            isValidId(friendId);
-            User user = dbUserStorage.getUserById(userId);
-            User friend = dbUserStorage.getUserById(friendId);
+            User user = isValidUserFromDb(userId);
+            User friend = isValidUserFromDb(userId);
             if (user.getFriends() == null) {
                 user.setFriends(new TreeSet<>());
             }
             if (friend.getFriends() == null) {
                 friend.setFriends(new TreeSet<>());
             }
-            if (dbUserStorage.getUserById(userId) != null && dbUserStorage.getUserById(friendId) != null) {
+            if (user != null && friend != null) {
                 dbUserStorage.addFriend(userId, friendId);
-                dbUserStorage.updateUser(getUserById(userId));
-                dbUserStorage.updateUser(getUserById(friendId));
+                dbUserStorage.updateUser(user);
+                dbUserStorage.updateUser(friend);
                 getUserById(userId).getFriendshipStatus().put(friendId, true);
                 return true;
             } else {
@@ -67,8 +68,8 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public boolean removeFriend(User user, Integer friendId) {
-        isValidId(user.getId());
-        isValidId(friendId);
+        isValidUserFromDb(user.getId());
+        isValidUserFromDb(friendId);
         if (dbUserStorage.getUserById(user.getId()) != null && dbUserStorage.getUserById(friendId) != null) {
             dbUserStorage.removeFriend(user, friendId);
             return true;
@@ -93,8 +94,19 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public List<User> findAllUserFriends(Integer userId) {
-        isValidId(userId);
+        isValidUserFromDb(userId);
         return dbUserStorage.findAllUserFriends(userId);
+    }
+
+    public User isValidUserFromDb(Integer id) {
+        if (id != null && id < 1) {
+            throw new NotFoundException("Неправильно указан id пользователя");
+        }
+        if (dbUserStorage.getUserById(id) != null) {
+            return dbUserStorage.getUserById(id);
+        } else {
+            throw new ValidationException("Такого пользователя не существует.");
+        }
     }
 
     public void isValidId(Integer id) {
