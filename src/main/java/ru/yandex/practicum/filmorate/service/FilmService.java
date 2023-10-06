@@ -3,39 +3,52 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.dao.DbFilmStorage;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class FilmService implements FilmServiceInterface {
-    public final FilmStorage filmStorage;
+    public final DbFilmStorage dbFilmStorage;
 
     @Override
     public boolean addLike(Integer filmId, Integer userId) {
-        Film film = filmStorage.getFilmById(filmId);
-        filmStorage.isValidFilm(film);
-        if (film.getLikes() == null) {
-            film.setLikes(new TreeSet<>());
-        }
-        if (userId != null) {
-            filmStorage.getFilms().get(filmId).getLikes().add(userId);
-            return true;
-        } else {
+        try {
+            Film film = dbFilmStorage.getFilmById(filmId);
+            isValidFilm(film);
+            if (userId != null) {
+                log.info("Adding like to film " + film.getId() + "from user " + userId);
+                if (film.getLikes() == null) {
+                    film.setLikes(new TreeSet<>());
+                    film.getLikes().add(userId);
+                }
+                log.info("Like has been added.");
+                dbFilmStorage.addLike(filmId, userId);
+                return true;
+            } else {
+                log.info("User Id is null");
+                return false;
+            }
+        } catch (NotFoundException e) {
             return false;
         }
     }
 
     @Override
     public boolean removeLike(Film film, Integer userId) {
-        filmStorage.isValidFilm(film);
+        isValidFilm(film);
         if (userId != null && userId > 0) {
-            Film existingFilm = filmStorage.getFilmById(film.getId());
+            Film existingFilm = dbFilmStorage.getFilmById(film.getId());
             if (existingFilm != null && existingFilm.getLikes() != null) {
-                existingFilm.getLikes().remove(userId);
+                dbFilmStorage.removeLike(existingFilm, userId);
                 return true;
             }
         }
@@ -44,42 +57,62 @@ public class FilmService implements FilmServiceInterface {
 
     @Override
     public List<Film> getTopTenFilms(Integer count) {
-        if (filmStorage.getFilms() != null) {
-            Comparator<Film> likeComparator = Comparator.comparingInt(film -> {
-                if (film.getLikes() != null) {
-                    return -film.getLikes().size();
-                } else {
-                    return 0;
-                }
-            });
-
-            List<Film> films = new ArrayList<>(filmStorage.getFilms().values());
-            films.sort(likeComparator);
-            return films.subList(0, Math.min(count, films.size()));
+        if (dbFilmStorage.getTopTenFilms(10) != null) {
+            return dbFilmStorage.getTopTenFilms(10);
+        } else {
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
     }
 
     @Override
     public Film addFilm(Film film) {
+        isValidFilm(film);
         log.info("Adding film " + film.getId());
-        return filmStorage.addFilm(film);
+        return dbFilmStorage.addFilm(film);
     }
 
     @Override
     public Film updateFilm(Film film) {
         log.info("Updating film " + film.getId());
-        return filmStorage.updateFilm(film);
+        return dbFilmStorage.updateFilm(film);
     }
 
     @Override
     public List<Film> findAllFilms() {
         log.info("Finding all films ");
-        return filmStorage.findAllFilms();
+        return dbFilmStorage.findAllFilms();
     }
 
     @Override
     public Film getFilmById(Integer id) {
-        return filmStorage.getFilmById(id);
+        return dbFilmStorage.getFilmById(id);
+    }
+
+    public void isValidFilm(Film film) {
+        if (film.getName() == null || film.getName().isBlank()) {
+            throw new ValidationException("Неверное название");
+        } else if (film.getDescription() == null || film.getDescription().length() > 200) {
+            throw new ValidationException("Описание превышает 200 символов.");
+        } else if (film.getReleaseDate() == null || film.getReleaseDate().isBefore(LocalDate.parse("1895-12-28"))) {
+            throw new ValidationException("Неверная дата релиза.");
+        } else if (film.getDuration() == null || film.getDuration() <= 0) {
+            throw new ValidationException("Указана неверная продолжительность фильма.");
+        }
+    }
+
+    public Genre getGenre(int id) {
+        return dbFilmStorage.getGenreById(id);
+    }
+
+    public List<Genre> getAllGenres() {
+        return dbFilmStorage.getAllGenres();
+    }
+
+    public Mpa getMpa(int id) {
+        return dbFilmStorage.getMpaById(id);
+    }
+
+    public List<Mpa> getAllMpa() {
+        return dbFilmStorage.getAllMpa();
     }
 }
